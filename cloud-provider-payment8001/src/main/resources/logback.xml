@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 彩色日志 -->
+    <!-- 彩色日志依赖的渲染类 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+    <property name="loghome" value="${LOG_HOME}"/>
+    <property name="appName" value="${APP_NAME}"/>
+
+    <!-- 控制台输出日志 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!--<layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%boldRed(%d{yyyy-MM-dd HH:mm:ss.SSS}) %boldBlue([%thread] %-5level) %boldCyan(%logger{50}) %boldMagenta(&#45;&#45; :%L &#45;&#45;) %highlight(%msg%n)
+            </pattern>
+        </layout>-->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%boldRed(%d{yyyy-MM-dd HH:mm:ss.SSS}) %boldBlue([%thread] %-5level) %boldCyan(%logger{50}) %boldMagenta(---- %L ) %highlight(%msg%n)</pattern>
+        </encoder>
+    </appender>
+
+
+    <!-- 总日志 -->
+    <appender name="FILE_ALL"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${loghome}/${appName}_all.log</file>
+        <encoder>
+            <pattern>
+                ${appName} %d{yyyy-MM-dd HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{50} :%L - %msg%n
+            </pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${loghome}/${appName}_all.%d{yyyy-MM-dd}.log
+            </fileNamePattern>
+            <maxHistory>15</maxHistory>
+            <totalSizeCap>3GB</totalSizeCap>
+            <CleanHistoryOnStart>true</CleanHistoryOnStart>
+        </rollingPolicy>
+        <!--日志文件最大的大小-->
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>30MB</MaxFileSize>
+        </triggeringPolicy>
+    </appender>
+
+
+    <logger name="com.aiguigu.springCloud" level="INFO"/>
+    <logger name="java.sql.Connection" level="DEBUG"/>
+    <logger name="java.sql.Statement" level="DEBUG"/>
+    <logger name="java.sql.PreparedStatement" level="DEBUG"/>
+    <logger name="org.springframework" level="INFO"/>
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE_ALL" />
+    </root>
+</configuration>
